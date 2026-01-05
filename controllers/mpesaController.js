@@ -29,7 +29,7 @@ export const stkPush = async (req, res) => {
             TransactionType: "CustomerBuyGoodsOnline",
             Amount: amount,
             PartyA: `254${formattedPhoneNumber}`,
-            PartyB: shortCode,              // MUST be same as BusinessShortCode
+            PartyB: till,              // MUST be same as BusinessShortCode
             PhoneNumber: `254${formattedPhoneNumber}`,
             CallBackURL: callbackUrl,
             AccountReference: `254${formattedPhoneNumber}`,
