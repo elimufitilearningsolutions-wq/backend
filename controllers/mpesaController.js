@@ -23,7 +23,7 @@ export const stkPush = async (req, res) => {
             BusinessShortCode: shortCode,
             Password: password,
             Timestamp: timestamp,
-            TransactionType: "CustomerBuyGoodsOnline",
+            TransactionType: "CustomerPayBillOnline",
             Amount: amount,
             PartyA: `254${formattedPhoneNumber}`,
             PartyB: till,
