@@ -25,11 +25,11 @@ export const stkPush = async (req, res) => {
         const response = await axios.post(apiUrl, {
             BusinessShortCode: shortCode,   // TILL number
             Password: password,
-            Timestamp: timestamp,
+            Timestamp: timestamp, // 
             TransactionType: "CustomerBuyGoodsOnline",
             Amount: amount,
             PartyA: `254${formattedPhoneNumber}`,
-            PartyB: till,              // MUST be same as BusinessShortCode
+            PartyB: till,              // We changed this from shortcode to till
             PhoneNumber: `254${formattedPhoneNumber}`,
             CallBackURL: callbackUrl,
             AccountReference: `254${formattedPhoneNumber}`,
