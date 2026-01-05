@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import { URLSearchParams } from "url";
 dotenv.config();
 
+
+console.log("SHORT_CODE:", process.env.SHORT_CODE);
+
 export const stkPush = async (req, res) => {
     const { SHORT_CODE: shortCode, TILL: till, PASSKEY: passkey, CALLBACK_URL: callbackUrl, API_URL: apiUrl } = process.env;
     const token = req.token;
@@ -20,22 +23,23 @@ export const stkPush = async (req, res) => {
         const password = Buffer.from(`${shortCode}${passkey}${timestamp}`).toString("base64");
 
         const response = await axios.post(apiUrl, {
-            BusinessShortCode: shortCode,
+            BusinessShortCode: shortCode,   // TILL number
             Password: password,
             Timestamp: timestamp,
-            TransactionType: "CustomerPayBillOnline",
+            TransactionType: "CustomerBuyGoodsOnline",
             Amount: amount,
             PartyA: `254${formattedPhoneNumber}`,
-            PartyB: till,
+            PartyB: shortCode,              // MUST be same as BusinessShortCode
             PhoneNumber: `254${formattedPhoneNumber}`,
             CallBackURL: callbackUrl,
             AccountReference: `254${formattedPhoneNumber}`,
             TransactionDesc: "Purchase of Goods"
-        }, {
+            }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        });
+            });
+
 
         const { CheckoutRequestID } = response.data;
 
