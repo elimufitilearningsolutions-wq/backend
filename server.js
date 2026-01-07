@@ -18,8 +18,8 @@ const PORT = process.env.PORT || 8001;
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser()); // Parse cookies
 
 // CORS Configuration
