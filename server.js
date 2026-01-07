@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+
 import { authRouter } from "./routes/auth.js";
 import { prePriRouter } from "./routes/pre_primary.js";
 import { priRouter } from "./routes/primary.js";
@@ -11,45 +12,53 @@ import { mpesaRouter } from "./routes/mpesaRoute.js";
 import { userDataRoute } from "./routes/userDataRoute.js";
 import { subscriptionRouter } from "./routes/subscription.js";
 import { applicantsRouter } from "./routes/applicants.js";
-// Load environment variables from .env file
+
 dotenv.config();
 
 const PORT = process.env.PORT || 8001;
 const app = express();
 
-// Middleware
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(cookieParser()); // Parse cookies
+/* =======================
+   CORS CONFIG FIRST
+======================= */
 
-// CORS Configuration
-const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['https://elimufiti.co.ke', 'https://www.elimufiti.co.ke']  // Allow subdomains in production
-    : process.env.CORS_ORIGIN?.split(',') || [];  // Allow multiple origins in development
+const allowedOrigins =
+    process.env.NODE_ENV === 'production'
+        ? ['https://elimufiti.co.ke', 'https://www.elimufiti.co.ke']
+        : process.env.CORS_ORIGIN?.split(',') || [];
 
 const corsOptions = {
     origin: (origin, callback) => {
-        // Allow requests with no origin (like Postman or server-to-server requests)
-        if (process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin) || !origin) {
+        if (
+            process.env.NODE_ENV !== 'production' ||
+            allowedOrigins.includes(origin) ||
+            !origin
+        ) {
             callback(null, true);
         } else {
-            console.log(`Blocked CORS request from: ${origin}`);  // Log blocked requests for debugging
+            console.log(`Blocked CORS request from: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ["POST", "GET", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,  // Enable credentials (cookies, authorization headers)
+    credentials: true,
 };
 
-// Apply CORS middleware to all routes
+/* APPLY CORS BEFORE ANYTHING ELSE */
 app.use(cors(corsOptions));
-
-// Enable preflight requests for all routes
 app.options('*', cors(corsOptions));
 
+/* =======================
+   BODY PARSERS
+======================= */
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(cookieParser());
 
-// Routes
+/* =======================
+   ROUTES
+======================= */
 app.use("/api", authRouter);
 app.use("/applicants", applicantsRouter);
 app.use("/pre/primary", prePriRouter);
@@ -60,18 +69,26 @@ app.use("/api/transactions", mpesaRouter);
 app.use("/user/data", userDataRoute);
 app.use("/api/subscriptions", subscriptionRouter);
 
-// 404 Handler
+/* =======================
+   404
+======================= */
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });
 
-// Error Handling Middleware
+/* =======================
+   ERROR HANDLER
+======================= */
 app.use((err, req, res, next) => {
-    console.error('Error occurred:', err.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error(err);
+    res.status(err.status || 500).json({
+        error: err.message || 'Internal Server Error'
+    });
 });
 
-// Start the server
+/* =======================
+   START SERVER
+======================= */
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
