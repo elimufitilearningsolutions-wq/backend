@@ -117,7 +117,7 @@ priRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
 },createResourceHandler) 
  priRouter.post("/create/holiday/assignments",upload.array("files"), (req, res, next) => {
     req.body.schema = 'elimufi1_primaryschool';
-    req.body.table = 'schemes';
+    req.body.table = 'holiday_assignments';
     next();
 },createResourceHandler)
 //get all

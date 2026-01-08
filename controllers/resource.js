@@ -9,7 +9,6 @@ import {
   handleDatabaseError
 } from "./errorHandlers.js";
 
-
 export const createResource = async (req, res, tableName, pool) => {
   try {
     // Validate request
@@ -18,36 +17,28 @@ export const createResource = async (req, res, tableName, pool) => {
       return handleValidationError(res, errors);
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!req.files?.length) {
       return res.status(400).json({ error: "File data is missing or invalid." });
     }
 
     const { form, term, subject, year, examMS, set, grade } = req.body;
 
-    // Loop through files
-    const fileInsertPromises = req.files.map(async (file) => {
-      const { buffer, originalname, mimetype } = file;
-      const fileExtension = originalname.split(".").pop();
+    const insertSql = `
+      INSERT INTO ${tableName}
+      (form, term, subject, file_url, year, fileName, fileExtension, examMS, \`set\`, grade)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
-      console.log(`Uploading file: ${originalname}`);
+    await Promise.all(
+      req.files.map(async ({ buffer, originalname, mimetype }) => {
+        const fileExtension = originalname.split(".").pop();
 
-      // Upload to R2
-      let fileUrl;
-      try {
-        fileUrl = await uploadToR2(originalname, buffer, mimetype);
-        console.log(`R2 upload succeeded: ${fileUrl}`);
-      } catch (r2Error) {
-        console.error(`R2 upload failed for ${originalname}:`, r2Error);
-        throw new Error(`R2 upload failed for ${originalname}: ${r2Error.message}`);
-      }
+        console.log("📤 Uploading:", originalname);
 
-      // Insert into DB
-      const sql = `INSERT INTO ${tableName}
-        (form, term, subject, file_url, year, fileName, fileExtension, examMS, \`set\`, grade)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const fileUrl = await uploadToR2(originalname, buffer, mimetype);
+        console.log("☁️ R2 OK:", fileUrl);
 
-      try {
-        await pool.query(sql, [
+        await pool.query(insertSql, [
           form,
           term,
           subject,
@@ -57,27 +48,22 @@ export const createResource = async (req, res, tableName, pool) => {
           fileExtension,
           examMS,
           set,
-          grade,
+          grade
         ]);
-        console.log(`Database insert succeeded for ${originalname}`);
-      } catch (dbError) {
-        console.error(`DB insert failed for ${originalname}:`, dbError);
-        throw new Error(`DB insert failed for ${originalname}: ${dbError.message}`);
-      }
-    });
 
-    // Wait for all files
-    await Promise.all(fileInsertPromises);
+        console.log("✅ DB insert:", originalname);
+      })
+    );
 
     return res.status(201).json({ message: "All files successfully saved." });
   } catch (error) {
-    console.error("Full error in createResource:", error);
+    console.error("❌ createResource error:", error);
     return res.status(500).json({
-      errorMessage: error.message,
-      stack: error.stack,
+      errorMessage: error.message
     });
   }
 };
+
 
 export const createResourceHandler = async (req, res) => {
   try {
@@ -87,18 +73,22 @@ export const createResourceHandler = async (req, res) => {
       return res.status(400).json({ error: "Schema and table are required." });
     }
 
-    // Get pool (retaining your existing method)
     const pool = getPoolBySchema(schema);
 
-    return createResource(req, res, `${schema}.${table}`, pool);
+    // 🔒 Safety check (keep this)
+    const [[{ db }]] = await pool.query("SELECT DATABASE() AS db");
+    console.log("🔥 INSERT DB:", db);
+    console.log("📌 INSERT TABLE:", table);
+
+    return createResource(req, res, table, pool);
   } catch (error) {
-    console.error("Error in createResourceHandler:", error);
+    console.error("❌ createResourceHandler error:", error);
     return res.status(500).json({
-      errorMessage: error.message,
-      stack: error.stack,
+      errorMessage: error.message
     });
   }
 };
+
 
 
 
