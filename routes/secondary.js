@@ -56,16 +56,13 @@ secRouter.post("/create/fullset/examinations", upload.array("files"), (req, res,
     req.body.table = 'fullset_examinations';
     next();
 }, createResourceHandler);
-secRouter.post("/create/revision/notes", upload.array("files"), (req, res, next) => {
+secRouter.post("/create/notes", upload.array("files"), (req, res, next) => {
     req.body.schema = 'elimufi1_secondary';
     req.body.table = 'revision_notes';
     next();
 }, createResourceHandler);
-secRouter.post("/create/holiday/revision", upload.array("files"), (req, res, next) => {
-    req.body.schema = 'elimufi1_secondary';
-    req.body.table = 'holiday_revisions';
-    next();
-}, createResourceHandler);
+
+
 secRouter.post("/create/holiday/assignments", upload.array("files"), (req, res, next) => {
     req.body.schema = 'elimufi1_secondary';
     req.body.table = 'holiday_assignments';

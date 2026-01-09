@@ -108,11 +108,6 @@ jssRouter.post("/create/holiday/assignments", upload.array("files"), (req, res, 
         req.body.table = 'holiday_assignments';
         next();
     }, createResourceHandler);
-jssRouter.post("/notes", upload.array("files"), (req, res, next) => {
-        req.body.schema = 'elimufi1_jss';
-        req.body.table = 'notes';
-        next();
-    }, createResourceHandler);  // check if its error
 
 
 
