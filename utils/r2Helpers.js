@@ -12,6 +12,7 @@ export const uploadToR2 = async (fileName, fileBuffer, contentType) => {
     Key: fileName,
     Body: fileBuffer,
     ContentType: contentType,
+    ContentDisposition: 'inline'
   });
 
   const response = await r2Client.send(command);

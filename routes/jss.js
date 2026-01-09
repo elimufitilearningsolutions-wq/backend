@@ -112,7 +112,7 @@ jssRouter.post("/notes", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'notes';
         next();
-    }, createResourceHandler);
+    }, createResourceHandler);  // check if its error
 
 
 
