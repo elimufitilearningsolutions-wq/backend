@@ -46,6 +46,7 @@ const databases = {
     poolPreprimary: process.env.DB_NAME_PREPRIMARY,
     poolSecondary: process.env.DB_NAME_SECONDARY,
     poolPrimarySchool: process.env.DB_NAME_PRIMARYSCHOOL,
+    poolSeniorSchool:process.env.DB_NAME_SENIORSCHOOL
 };
 
 const pools = Object.entries(databases).reduce((acc, [key, dbName]) => {
@@ -95,5 +96,6 @@ export const poolUsers = pools.poolUsers;
 export const poolPreprimary = pools.poolPreprimary;
 export const poolSecondary = pools.poolSecondary;
 export const poolPrimarySchool = pools.poolPrimarySchool;
+export const poolSeniorSchool = pools.poolSeniorSchool
 
 export { safeQuery };

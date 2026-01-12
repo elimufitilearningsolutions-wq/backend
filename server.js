@@ -12,6 +12,7 @@ import { mpesaRouter } from "./routes/mpesaRoute.js";
 import { userDataRoute } from "./routes/userDataRoute.js";
 import { subscriptionRouter } from "./routes/subscription.js";
 import { applicantsRouter } from "./routes/applicants.js";
+import { seniorSchoolRouter } from "./routes/seniorSchool.js";
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use("/applicants", applicantsRouter);
 app.use("/pre/primary", prePriRouter);
 app.use("/primary", priRouter);
 app.use("/jss", jssRouter);
+app.use("/senior/school", seniorSchoolRouter)
 app.use("/secondary", secRouter);
 app.use("/api/transactions", mpesaRouter);
 app.use("/user/data", userDataRoute);
