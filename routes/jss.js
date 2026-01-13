@@ -57,7 +57,10 @@ import {
         deleteJssNotes,
         getJssNotesFileByID,
         deleteJssNotesByID,
-        getJssSchemesByYear} from "../controllers/jss.js"
+        getJssSchemesByYear,
+        getJssLessonPlans,
+        getJssLessonPlansByYear,
+        getJssLessonPlanFileByID} from "../controllers/jss.js"
 import upload from "../middlewares/upload.js"
 import { protectedEndpoint } from "../controllers/auth.js"
 import { createResourceHandler } from "../controllers/resource.js"
@@ -109,6 +112,12 @@ jssRouter.post("/create/holiday/assignments", upload.array("files"), (req, res, 
         next();
     }, createResourceHandler);
 
+jssRouter.post("/create/lesson/plans", upload.array("files"), (req, res, next) => {
+        req.body.schema = 'elimufi1_jss';
+        req.body.table = 'lesson_plan';
+        next();
+    }, createResourceHandler);
+
 
 
 
@@ -119,6 +128,7 @@ jssRouter.post("/create/holiday/assignments", upload.array("files"), (req, res, 
 
 //GET ALL
 jssRouter.get   ("/schemes",  getJssSchemes) 
+jssRouter.get   ("/lesson/plans",  getJssLessonPlans) 
 jssRouter.get   ("/notes",  getJssNotes) 
 jssRouter.get   ("/assessment/tools", getJssAssessmentTools)
 jssRouter.get   ("/curriculum/designs", getJssCurriculumdesign)
@@ -129,6 +139,7 @@ jssRouter.get   ("/holiday/assignments", getJssHolidayAssignments)
 
 //GET BY YEAR
 jssRouter.get   ("/assessment/tools/:year", getJssAssessmentToolsByYear)
+jssRouter.get   ("/lesson/plans/:year", getJssLessonPlansByYear)
 jssRouter.get   ("/grade7/examinations/:year", getGrade7ExaminationsByYear)
 jssRouter.get   ("/grade8/examinations/:year", getGrade8ExaminationsByYear)
 jssRouter.get   ("/notes/:year", getJssNotesByYear)
@@ -140,6 +151,7 @@ jssRouter.get   ("/holiday/assignments/:year", getJssHolidayAssignmentsByYear)
 //FILE
 jssRouter.get   ("/schemes/file/:id",protectedEndpoint, getJssSchemeFileByID)
 jssRouter.get   ("/note/file/:id",protectedEndpoint, getJssNotesFileByID)
+jssRouter.get   ("/lesson/plan/file/:id",protectedEndpoint, getJssLessonPlanFileByID)
 jssRouter.get   ("/assessment/tool/file/:id",protectedEndpoint, getJssAssesmentToolsFileByID)
 jssRouter.get   ("/curriculum/design/file/:id", protectedEndpoint, getJssCurriculumdesignFileByID)
 jssRouter.get   ("/grade7/examination/file/:id", protectedEndpoint, getGrade7ExaminationFileByID)
@@ -148,6 +160,8 @@ jssRouter.get   ("/fullset/examination/file/:id", protectedEndpoint,  getJssfull
 
 jssRouter.get   ("/holiday/assignment/file/:id", protectedEndpoint, getJssHassignmentsFileByID)
 
+
+//DELETE
 jssRouter.delete("/delete/schemes", deleteJssSchemes)
 jssRouter.delete("/delete/notes", deleteJssNotes)
 jssRouter.delete ("/delete/assessment/tools", deleteJssAssesmentTools)

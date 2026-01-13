@@ -1,9 +1,13 @@
-import { deleteAllResources, deleteResource, updateResourceById, getResources,getResourcesByYear, getFileByID } from "./resource.js";
+import { deleteAllResources, deleteResource, updateResourceById, getResources,getResourcesByYear, getFileByID } 
+from "./resource.js";
 // CREATION OF JSS RESOURCES
 
 //RETRIEVE ALL (JSS)
 export const getJssSchemes = async (req, res) => {
     return getResources(req, res, 'schemes', "elimufi1_jss");
+};
+export const getJssLessonPlans = async (req, res) => {
+    return getResources(req, res, 'lesson_plan', "elimufi1_jss");
 };
 export const getJssNotes = async (req, res) => {
     return getResources(req, res, 'notes', "elimufi1_jss");
@@ -36,6 +40,10 @@ export const getJssHolidayAssignments = async (req, res) => {
 export const getJssAssessmentToolsByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'assessment_tools',"elimufi1_jss");
 }
+
+export const getJssLessonPlansByYear = async (req, res) => {
+    return getResourcesByYear(req, res, 'lesson_plan', "elimufi1_jss");
+};
 export const getJssSchemesByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'schemes',"elimufi1_jss");
 }
@@ -163,6 +171,9 @@ export const updateJssHassignmentsByID = async (req, res) => {
 //GET FILE BY ID (JSS) && DOWNLOADING FILE
 export const getJssSchemeFileByID = async (req, res) => {
     return getFileByID(req, res, 'schemes',"elimufi1_jss");
+};
+export const getJssLessonPlanFileByID = async (req, res) => {
+    return getFileByID(req, res, 'lesson_plan',"elimufi1_jss");
 };
 export const getJssNotesFileByID = async (req, res) => {
     return getFileByID(req, res, 'notes',"elimufi1_jss");
