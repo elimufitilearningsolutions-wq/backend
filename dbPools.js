@@ -1,4 +1,4 @@
-import { poolJSS, poolUsers, poolPreprimary, poolSecondary, poolPrimarySchool, poolSeniorSchool } from './db.js';
+import { poolJSS, poolUsers, poolPreprimary, poolSecondary, poolPrimarySchool, poolSeniorSchool, poolCollege } from './db.js';
 
 export const getPoolBySchema = (schema) => {
     switch (schema) {
@@ -14,6 +14,8 @@ export const getPoolBySchema = (schema) => {
           return poolPrimarySchool;
         case `elimufi1_senior`:
           return poolSeniorSchool;
+          case `elimufi1_college`:
+            return poolCollege
         default:
           throw new Error('Unknown schema');
       }
