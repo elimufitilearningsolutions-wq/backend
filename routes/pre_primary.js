@@ -28,7 +28,8 @@ import { /*createScheme, */
     deletePriPrimaryHolidayAssignmentsByID,
     getPriPrimaryCurriculumDesignFileByID,
     deletePriPrimaryCurriculumDesignByID,
-    deleteAllPrePrimaryCurriculuDesigns
+    deleteAllPrePrimaryCurriculuDesigns,
+    getPlayGroupColouringByYear
    
 } from "../controllers/pre_primary.js"
 import { protectedEndpoint } from "../controllers/auth.js"
@@ -42,6 +43,13 @@ prePriRouter.post("/create/schemes", upload.array("files"), (req, res, next) => 
     req.body.table = 'schemes';
     next();
 }, createResourceHandler);
+prePriRouter.post("/create/coluring/pages", upload.array("files"), (req, res, next) => {
+    req.body.schema = 'elimufi1_preprimary';
+    req.body.table = 'colouring_pages';
+    next();
+}, createResourceHandler);
+
+
 prePriRouter.post("/create/curriculum/designs", upload.array("files"), (req, res, next) => {
     req.body.schema = 'elimufi1_preprimary';
     req.body.table = 'curriculum_designs';
@@ -72,12 +80,14 @@ prePriRouter.post("/create/holiday/assignments", upload.array("files"), (req, re
 //GET ALL
 prePriRouter.get("/schemes", getPriPrimarySchemes)
 prePriRouter.get("/play/group/exams", getPlayGroupExams)
+
 prePriRouter.get("/pp1/exams", getPP1Exams)
 prePriRouter.get("/pp2/exams", getPP2Exams)
 prePriRouter.get("/holiday/assignments", getPriPrimaryHolidayAssignments)
 prePriRouter.get("/curriculum/designs", getPriPrimaryCurriculumDesign)
 
 prePriRouter.get("/play/group/exams/:year", getPlayGroupExamsByYear)
+prePriRouter.get("/play/group/colouring/:year", getPlayGroupColouringByYear)
 prePriRouter.get("/schemes/:year", getPrePrimarySchemesByYear)
 prePriRouter.get("/PP1/exams/:year", getPPE1ExamsByYear)
 prePriRouter.get("/PP2/exams/:year", getPPE2ExamsByYear)
@@ -88,6 +98,7 @@ prePriRouter.get("/curriculum/designs/:year", getPriPrimaryCurriculumDesignByYea
 //GET FILE BY ID/download
 prePriRouter.get("/scheme/file/:id", protectedEndpoint, getPriPrimarySchemeFileByID)
 prePriRouter.get("/play/group/exam/file/:id", protectedEndpoint, getPlayGroupExamByID)
+prePriRouter.get("/play/group/colourin/file/:id",  getPlayGroupExamByID)
 prePriRouter.get("/pp1/exam/file/:id", protectedEndpoint, getPP1ExamByID)
 prePriRouter.get("/pp2/exam/file/:id", protectedEndpoint, getPP2ExamByID)
 prePriRouter.get("/pre/primary/holiday/revision/file/:id", protectedEndpoint, getPrePrimaryRevisionFileByID)

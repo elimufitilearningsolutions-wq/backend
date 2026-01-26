@@ -36,6 +36,11 @@ return getResources(req, res, "holiday_assignments", "elimufi1_preprimary");
 export const getPriPrimaryCurriculumDesignByYear = async (req, res) => {
 return getResourcesByYear(req, res, 'curriculum_designs',"elimufi1_preprimary" );
 }
+export const getPlayGroupColouringByYear = async (req, res) => {
+return getResourcesByYear(req, res, 'colouring_pages',"elimufi1_preprimary" );
+}
+
+
 export const getPrePrimarySchemesByYear = async (req, res) => {
 return getResourcesByYear(req, res, 'schemes',"elimufi1_preprimary");
 }
@@ -94,9 +99,14 @@ export const deleteAllPrePrimaryCurriculuDesigns = async (req, res) => {
 export const getPriPrimarySchemeFileByID = async (req, res) => {
 return getFileByID(req, res, 'schemes', "elimufi1_preprimary");
 }
+
 export const getPlayGroupExamByID = async (req, res) => {
 return getFileByID(req, res, 'playgroup_exams', "elimufi1_preprimary");
 }
+export const getPlayGroupColouringByID = async (req, res) => {
+return getFileByID(req, res, 'colouring_pages', "elimufi1_preprimary");
+}
+
 export const getPP1ExamByID = async (req, res) => {
 return getFileByID(req, res, 'pp1_exams', "elimufi1_preprimary");
 }
