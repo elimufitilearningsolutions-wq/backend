@@ -210,16 +210,14 @@ const updateSubscription = async (userId, updateFields) => {
 export const getSubscriptionStatus = async (req, res) => {
     const { userId } = req.params;
     try {
-        const [subscriptionStatus] = await poolUsers.query('SELECT Amount FROM elimufi1_users.signup WHERE user_id = ?', [userId]);
-        if (subscriptionStatus.length > 0) {
-            res.json(subscriptionStatus[0]);
-        } else {
-            res.status(404).json({ message: 'Subscription status not found' });
-        }
+        const [rows] = await poolUsers.query("SELECT Amount FROM signup WHERE user_id = ?", [userId]);
+        if (rows.length === 0) return res.status(404).json({ message: "Subscription status not found" });
+        res.json({ Amount: rows[0].Amount });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ message: "Server error", error });
     }
 };
+
 
 export const getAdministrationStatus = async (req, res) => {
     const { userId } = req.params;
