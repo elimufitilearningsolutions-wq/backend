@@ -59,7 +59,7 @@ import {
     updatePrimaryRevisionNotesByID,
     updatePrimaryHolidayAssignmentsByID} from "../controllers/primary.js";
 import { protectedEndpoint } from "../controllers/auth.js";
-import { createResourceHandler, } from "../controllers/resource.js";
+import { createResourceHandler,  deleteResourcesBulkHandler, } from "../controllers/resource.js";
 
 
 const priRouter = express.Router()
@@ -164,6 +164,7 @@ priRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
 
 
  priRouter.delete("/schemes/:id", deletePrimarySchemesByID)
+ priRouter.post("/schemes/bulk", deleteResourcesBulkHandler);
  priRouter.delete("/notes/file/:id", deletePrimaryRevisionNotesByID)
  priRouter.delete("/holiday/revision/:id", deletePrimaryHolidayAssignmentsByID)
  priRouter.delete("/assessment/tools/:id", deletePrimaryAssessmentToolsByID)

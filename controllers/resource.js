@@ -248,9 +248,104 @@ export const getFileByID = async (req, res, tableName, schema) => {
   }
 };
 
+export const deleteResourcesBulk = async (req, res, tableName, schema) => {
+  const { ids } = req.body;
 
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: "IDs array is required." });
+  }
 
+  try {
+    const pool = getPoolBySchema(schema);
 
+    // 1️⃣ Fetch matching resources from DB
+    const [rows] = await pool.query(
+      `SELECT id, file_url FROM ${tableName} WHERE id IN (?)`,
+      [ids]
+    );
+
+    if (!rows || rows.length === 0) {
+      return res.status(200).json({
+        message: "No matching resources found.",
+        deletedDbRows: 0,
+        deletedFiles: 0,
+        deletedKeys: [],
+      });
+    }
+
+    // 2️⃣ Delete files from R2 in parallel
+    const deletedKeys = await Promise.all(
+      rows.map(async ({ file_url }) => {
+        if (!file_url) return null;
+
+        const fileKey = decodeURIComponent(new URL(file_url).pathname.slice(1));
+
+        try {
+          await r2Client.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.R2_BUCKET_NAME,
+              Key: fileKey,
+            })
+          );
+
+          // Optionally verify deletion
+          try {
+            await r2Client.send(
+              new HeadObjectCommand({
+                Bucket: process.env.R2_BUCKET_NAME,
+                Key: fileKey,
+              })
+            );
+            console.warn(`⚠️ R2 file still exists after delete: ${fileKey}`);
+            return null;
+          } catch {
+            console.log("✅ Deleted from R2:", fileKey);
+            return fileKey;
+          }
+        } catch (err) {
+          console.error("R2 delete error:", fileKey, err);
+          return null;
+        }
+      })
+    );
+
+    const validDeletedKeys = deletedKeys.filter(Boolean);
+
+    // 3️⃣ Delete DB rows
+    const [result] = await pool.query(
+      `DELETE FROM ${tableName} WHERE id IN (?)`,
+      [ids]
+    );
+
+    return res.status(200).json({
+      message: "Bulk delete completed successfully.",
+      deletedDbRows: result.affectedRows,
+      deletedFiles: validDeletedKeys.length,
+      deletedKeys: validDeletedKeys,
+    });
+  } catch (error) {
+    console.error("deleteResourcesBulk error:", error);
+    return handleDatabaseError(res, error);
+  }
+};
+
+export const deleteResourcesBulkHandler = async (req, res) => {
+  try {
+    const { schema, table } = req.body;
+
+    if (!schema || !table) {
+      return res.status(400).json({ error: "Schema and table are required." });
+    }
+
+    // Make tableName safe
+    const tableName = `${schema}.${table}`;
+
+    return deleteResourcesBulk(req, res, tableName, schema);
+  } catch (error) {
+    console.error("deleteResourcesBulkHandler error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
@@ -268,6 +363,7 @@ export const getFileByIDHandler = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 
 export const deleteAllResources = async (req, res, tableName, schema) => {
