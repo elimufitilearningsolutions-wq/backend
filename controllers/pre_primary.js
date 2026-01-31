@@ -91,10 +91,16 @@ return deleteResource(req, res, 'holiday_assignments', "elimufi1_preprimary");
 export const deletePriPrimaryCurriculumDesignByID = async (req, res) => {
 return deleteResource(req, res, "curriculum_designs", "elimufi1_preprimary");
 }
+
 //Delete All
 export const deleteAllPrePrimaryCurriculuDesigns = async (req, res) => {
     return deleteAllResources(req, res, "curriculum_designs", "elimufi1_preprimary")
 }
+export const deleteAllPrePrimarySchemes = async (req, res) => {
+    return deleteAllResources(req, res, "schemes", "elimufi1_preprimary")
+}
+
+
 // DOWNLOAD FILE BY ID
 export const getPriPrimarySchemeFileByID = async (req, res) => {
 return getFileByID(req, res, 'schemes', "elimufi1_preprimary");

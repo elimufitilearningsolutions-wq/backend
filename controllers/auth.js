@@ -31,7 +31,10 @@ export const signup = async (req, res) => {
 
         await poolUsers.query("UPDATE signup SET current_token = ? WHERE user_id = ?", [token, userId]);
 
-        return res.status(201).json({ message: "Signup & login successful", token, userId });
+        // ✅ Log userId and isAdmin
+        console.log("SIGNUP:", { userId, isAdmin, token });
+
+        return res.status(201).json({ message: "Signup & login successful", token, userId, isAdmin });
     } catch (error) {
         console.error("Signup error:", error);
         return res.status(500).json({ errorMessage: "Internal Server Error" });
@@ -56,7 +59,11 @@ export const login = async (req, res) => {
         const token = jwt.sign({ payload }, secretKey, { expiresIn: "1d" });
 
         await poolUsers.query("UPDATE signup SET current_token = ? WHERE user_id = ?", [token, user.user_id]);
-        return res.status(200).json({ message: "Login successful", token, userId: user.user_id });
+
+        // ✅ Log userId and isAdmin
+        console.log("LOGIN:", { userId: user.user_id, isAdmin: user.isAdmin, token });
+
+        return res.status(200).json({ message: "Login successful", token, userId: user.user_id, isAdmin: user.isAdmin });
     } catch (error) {
         console.error("Login error:", error);
         return res.status(500).json({ errorMessage: "Internal Server Error" });
@@ -164,8 +171,14 @@ export const protectedEndpoint = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, secretKey);
-        const [userId] = decoded.payload;
+
+        // Extract both from the array
+        const [userId, isAdmin] = decoded.payload;
         req.userId = userId;
+        req.isAdmin = isAdmin;  
+
+        // ✅ Log for debugging
+        console.log('Protected Endpoint:', { userId, isAdmin });
 
         // Check subscription: Amount > 0
         const [rows] = await poolUsers.query(
@@ -181,3 +194,5 @@ export const protectedEndpoint = async (req, res, next) => {
         return res.status(400).json({ errorMessage: 'Invalid token or other validation error.' });
     }
 };
+
+

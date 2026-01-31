@@ -1,4 +1,4 @@
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import r2Client from "./r2Client.js";
 import dotenv from "dotenv";
@@ -29,4 +29,17 @@ export const getSignedR2DownloadUrl = async (key, expiresIn = 120) => {
   });
 
   return await getSignedUrl(r2Client, command, { expiresIn });
+};
+
+// ✅ DELETE
+export const deleteFromR2 = async (key) => {
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: key,
+  });
+
+  const response = await r2Client.send(command);
+  console.log("R2 delete metadata:", response.$metadata);
+
+  return true;
 };

@@ -29,7 +29,8 @@ import { /*createScheme, */
     getPriPrimaryCurriculumDesignFileByID,
     deletePriPrimaryCurriculumDesignByID,
     deleteAllPrePrimaryCurriculuDesigns,
-    getPlayGroupColouringByYear
+    getPlayGroupColouringByYear,
+    deleteAllPrePrimarySchemes
    
 } from "../controllers/pre_primary.js"
 import { protectedEndpoint } from "../controllers/auth.js"
@@ -119,5 +120,6 @@ prePriRouter.delete('/holiday/assignments/:id', deletePriPrimaryHolidayAssignmen
 prePriRouter.delete('/curriculum/designs/:id', deletePriPrimaryCurriculumDesignByID)
 
 prePriRouter.delete('/curriculum/designs', deleteAllPrePrimaryCurriculuDesigns)
+prePriRouter.delete('/schemes', deleteAllPrePrimarySchemes)
 
 export {prePriRouter}

@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { uploadToR2 } from "../utils/r2Helpers.js";
+import { DeleteObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import r2Client from "../utils/r2Client.js";
 import { getPoolBySchema } from "../dbPools.js";
 
@@ -118,7 +119,7 @@ export const getResourcesHandler = async (req, res) => {
         const table = req.body.table;
         const pool = getPoolBySchema(schema);
 
-        return getResources(req, res, `${schema}.${table}`, pool);
+        return getResources(req, res, `${schema}.${table}`, schema);
     } catch (error) {
         console.error(`Error fetching ${table}:`, error);
         return res.status(500).send({ error: "Internal server error" });
@@ -151,7 +152,8 @@ export const getResourcesByYearHandler = async (req, res) => {
         const year = req.params.year;
         const pool = getPoolBySchema(schema);
 
-        return getResourcesByYear(req, res, `${schema}.${table}`, pool);
+        return getResourcesByYear(req, res, `${schema}.${table}`, schema);
+
     } catch (error) {
         console.error(`Error fetching resources by year ${table}:`, error);
         return res.status(500).send({ error: "Internal server error" });
@@ -268,65 +270,176 @@ export const getFileByIDHandler = async (req, res) => {
 };
 
 
-export const deleteAllResources = async (req, res, tableName, pool) => {
-    try {
-        const sql = `DELETE FROM ${tableName}`;
-        const pool = getPoolBySchema(schema);
-        const result = await pool.query(sql);
+export const deleteAllResources = async (req, res, tableName, schema) => {
+  try {
+    const pool = getPoolBySchema(schema);
 
-        console.log("All resources successfully deleted from the database.");
-        return res.status(200).json({ message: "All resources successfully deleted from the database." });
-    } catch (error) {
-        console.error("Error deleting all resources from database:", error);
-        return handleDatabaseError(res, error);
+    // 1️⃣ Fetch file URLs belonging to THIS table only
+    const [rows] = await pool.query(
+      `SELECT file_url FROM ${tableName} WHERE file_url IS NOT NULL`
+    );
+
+    let deletedFiles = 0;
+
+    // 2️⃣ Delete each related file from R2
+    for (const { file_url } of rows) {
+      const url = new URL(file_url);
+      const fileKey = decodeURIComponent(url.pathname.slice(1));
+
+      // Delete from R2
+      await r2Client.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.R2_BUCKET_NAME,
+          Key: fileKey,
+        })
+      );
+
+      // Verify deletion
+      try {
+        await r2Client.send(
+          new HeadObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: fileKey,
+          })
+        );
+
+        return res.status(500).json({
+          error: "R2 file still exists after delete",
+          r2Key: fileKey,
+        });
+      } catch {
+        console.log("✅ Deleted R2:", fileKey);
+        deletedFiles++;
+      }
     }
+
+    // 3️⃣ Delete only THIS table’s rows
+    await pool.query(`DELETE FROM ${tableName}`);
+
+    return res.status(200).json({
+      message: "Table resources fully deleted (DB + R2).",
+      deletedFiles,
+    });
+  } catch (error) {
+    console.error("deleteAllResources error:", error);
+    return handleDatabaseError(res, error);
+  }
 };
+
 
 export const deleteAllResourcesHandler = async (req, res) => {
-    try {
-        const schema = req.body.schema;
-        const table = req.body.table;
-        const pool = getPoolBySchema(schema);
+  try {
+    const { schema, table } = req.body;
 
-        return deleteAllResources(req, res, `${schema}.${table}`, pool);
-    } catch (error) {
-        console.error(`Error deleting all resources ${table}:`, error);
-        return res.status(500).send({ error: "Internal server error" });
+    if (!schema || !table) {
+      return res.status(400).json({ error: "Schema and table are required." });
     }
+
+    return deleteAllResources(req, res, `${schema}.${table}`, schema);
+  } catch (error) {
+    console.error("deleteAllResourcesHandler error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
+
+
 
 export const deleteResource = async (req, res, tableName, schema) => {
-    const resourceId = req.params.id;
+  const resourceId = req.params.id;
 
-    try {
-        const sql = `DELETE FROM ${tableName} WHERE id = ?`;
-        const pool = getPoolBySchema(schema);
-        const result = await pool.query(sql, [resourceId]);
+  try {
+    const pool = getPoolBySchema(schema);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "Resource not found." });
-        }
+    // 1) Get resource (need file_url)
+    const [rows] = await pool.query(
+      `SELECT id, file_url FROM ${tableName} WHERE id = ?`,
+      [resourceId]
+    );
 
-        console.log("Resource successfully deleted.");
-        return res.status(200).json({ message: "Resource successfully deleted." });
-    } catch (error) {
-        console.error("Error deleting resource from database:", error);
-        return handleDatabaseError(res, error);
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ error: "Resource not found." });
     }
+
+    const { file_url } = rows[0];
+
+    let fileKey = null;
+    let r2Deleted = false;
+    let r2VerifiedDeleted = false;
+
+    // 2) Delete file from R2
+    if (file_url) {
+      const url = new URL(file_url);
+      fileKey = decodeURIComponent(url.pathname.slice(1));
+
+      const delCmd = new DeleteObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME,
+        Key: fileKey,
+      });
+
+      const delRes = await r2Client.send(delCmd);
+      console.log("☁️ R2 delete requestId:", delRes?.$metadata?.requestId);
+
+      r2Deleted = true;
+
+      // 3) Verify deletion
+      try {
+        await r2Client.send(
+          new HeadObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME,
+            Key: fileKey,
+          })
+        );
+
+        // if HeadObject succeeds => still exists
+        return res.status(500).json({
+          error: "File still exists in R2 after delete.",
+          r2Key: fileKey,
+        });
+      } catch (err) {
+        // if NotFound => deleted
+        r2VerifiedDeleted = true;
+        console.log("✅ Verified deleted from R2:", fileKey);
+      }
+    }
+
+    // 4) Delete from DB
+    const [result] = await pool.query(
+      `DELETE FROM ${tableName} WHERE id = ?`,
+      [resourceId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Resource not found." });
+    }
+
+    return res.status(200).json({
+      message: "Resource deleted from DB and Cloudflare R2 successfully.",
+      r2Deleted,
+      r2VerifiedDeleted,
+      r2Key: fileKey,
+    });
+  } catch (error) {
+    console.error("Error deleting resource:", error);
+    return handleDatabaseError(res, error);
+  }
 };
+
 
 export const deleteResourceHandler = async (req, res) => {
-    try {
-        const schema = req.body.schema;
-        const table = req.body.table;
-        const pool = getPoolBySchema(schema);
+  try {
+    const { schema, table } = req.body;
 
-        return deleteResource(req, res, `${schema}.${table}`, pool);
-    } catch (error) {
-        console.error(`Error deleting resource ${table}:`, error);
-        return res.status(500).send({ error: "Internal server error" });
+    if (!schema || !table) {
+      return res.status(400).json({ error: "Schema and table are required." });
     }
+
+    return deleteResource(req, res, `${schema}.${table}`, schema);
+  } catch (error) {
+    console.error(`Error deleting resource ${table}:`, error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
+
 
 export const updateResourceById = async (req, res, tableName, pool) => {
     try {
@@ -334,7 +447,7 @@ export const updateResourceById = async (req, res, tableName, pool) => {
         const { form, term, subject, year, examMS, set, grade } = req.body;
 
         const sql = `UPDATE ${tableName} SET form = ?, term = ?, subject = ?, year = ?, examMS = ?, \`set\` = ?, grade = ? WHERE id = ?`;
-        const result = await pool.query(sql, [form, term, subject, year, examMS, set, grade, resourceId]);
+        const [result] = await pool.query(sql, [form, term, subject, year, examMS, set, grade, resourceId]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: "Resource not found." });
