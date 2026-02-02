@@ -137,17 +137,37 @@ export const updateUser = async (req, res) => {
 
 // ================== GET USERS ==================
 export const getUsers = async (req, res) => {
-    try {
-        const [users] = await poolUsers.query(
-            "SELECT user_id, email, name, isAdmin, isSubscribed, amount, expiresIn, phoneNumber FROM signup"
-        );
-        if (users.length === 0) return res.status(404).json({ errorMessage: "No users found" });
-        return res.status(200).json(users);
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        return res.status(500).json({ errorMessage: "Internal Server Error" });
+  try {
+    const [users] = await poolUsers.query(`
+      SELECT
+        user_id,
+        email,
+        name,
+        phoneNumber,
+        isAdmin,
+        isSubscribed,
+        amount,
+        status,
+        transactionDate,
+        mpesaReceiptNumber,
+        checkoutRequestID,
+        FailureReason,
+        current_token
+      FROM signup
+      ORDER BY user_id DESC
+    `);
+
+    if (users.length === 0) {
+      return res.status(404).json({ errorMessage: "No users found" });
     }
+
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ errorMessage: "Internal Server Error" });
+  }
 };
+
 
 export const getUserById = async (req, res) => {
     try {
