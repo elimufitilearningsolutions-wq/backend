@@ -34,7 +34,7 @@ import { /*createScheme, */
    
 } from "../controllers/pre_primary.js"
 import { protectedEndpoint } from "../controllers/auth.js"
-import {createResourceHandler} from "../controllers/resource.js"
+import {createResourceHandler, deleteResourcesBulkHandler} from "../controllers/resource.js"
 
 
 const prePriRouter = express.Router()
@@ -113,7 +113,7 @@ prePriRouter.put("/update/play/group/exam/:id",updatePlayGroupExamByID)
 
 // DELETE BY ID
 prePriRouter.delete('/play/group/exams/:id', deletePlayGroupExamByID)
-prePriRouter.delete('/schemes/:id', deletePriPrimarySchemeByID)
+prePriRouter.post("/schemes/bulk", deleteResourcesBulkHandler)
 prePriRouter.delete('/pp1/exams/:id', deletePP1ExamByID)
 prePriRouter.delete('/pp2/exams/:id', deletePP2ExamByID)
 prePriRouter.delete('/holiday/assignments/:id', deletePriPrimaryHolidayAssignmentsByID)
