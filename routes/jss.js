@@ -63,7 +63,7 @@ import {
         getJssLessonPlanFileByID} from "../controllers/jss.js"
 import upload from "../middlewares/upload.js"
 import { protectedEndpoint } from "../controllers/auth.js"
-import { createResourceHandler } from "../controllers/resource.js"
+import { createResourceHandler, deleteResourcesBulkHandler } from "../controllers/resource.js"
 
 
 
@@ -163,6 +163,7 @@ jssRouter.get   ("/holiday/assignment/file/:id", protectedEndpoint, getJssHassig
 
 //DELETE
 jssRouter.delete("/delete/schemes", deleteJssSchemes)
+jssRouter.post("/schemes/bulk", deleteResourcesBulkHandler);
 jssRouter.delete("/delete/notes", deleteJssNotes)
 jssRouter.delete ("/delete/assessment/tools", deleteJssAssesmentTools)
 jssRouter.delete("/delete/curriculum/designs", deleteAllJssCurriculumdesigns)
