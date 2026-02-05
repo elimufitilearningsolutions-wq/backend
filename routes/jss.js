@@ -74,6 +74,13 @@ jssRouter.post("/create/schemes", upload.any("files"), (req, res, next) => {
         req.body.table = 'schemes';
         next();
     }, createResourceHandler);
+jssRouter.post("/create/lesson/plans", upload.any("files"), (req, res, next) => {
+        req.body.schema = 'elimufi1_jss';
+        req.body.table = 'lesson_plans';
+        next();
+    }, createResourceHandler);
+
+
 jssRouter.post("/create/notes", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'notes';

@@ -57,7 +57,9 @@ import {
     updateGrade5ExamsByID,
     updateGrade6ExamsByID,
     updatePrimaryRevisionNotesByID,
-    updatePrimaryHolidayAssignmentsByID} from "../controllers/primary.js";
+    updatePrimaryHolidayAssignmentsByID,
+    getPrimaryLessonPlanByYear,
+    getPrimaryLessonPlanFileByID} from "../controllers/primary.js";
 import { protectedEndpoint } from "../controllers/auth.js";
 import { createResourceHandler,  deleteResourcesBulkHandler, } from "../controllers/resource.js";
 
@@ -69,6 +71,13 @@ priRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
     req.body.table = 'schemes';
     next();
 }, createResourceHandler);
+priRouter.post("/create/lesson/plans", upload.array("files"), (req, res, next) => {
+    req.body.schema = 'elimufi1_primaryschool';
+    req.body.table = 'lesson_plans';
+    next();
+}, createResourceHandler);
+
+
  priRouter.post("/create/curriculum/designs", upload.array("files"),(req, res, next) => {
     req.body.schema = 'elimufi1_primaryschool';
     req.body.table = 'curriculum_designs';
@@ -136,6 +145,7 @@ priRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
  //get per year
 
  priRouter.get("/schemes/:year", getPrimarySchemesByYear);
+ priRouter.get("/lesson/plans/:year", getPrimaryLessonPlanByYear);
  priRouter.get("/revision/notes/:year", getPrimaryRevisionNotesByYear);
  priRouter.get("/holiday/revision/:year", getPrimaryHolidayAssignmentsByYear);
  priRouter.get("/assessment/tools/:year", getPrimaryAssessmentToolsByYear);
@@ -149,6 +159,7 @@ priRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
  priRouter.get("/holiday/assignments/:year", getPrimaryHolidayAssignmentsByYear);
 
  priRouter.get("/scheme/file/:id",protectedEndpoint, getPrimarySchemesFileByID)
+ priRouter.get("/lesson/plan/file/:id",protectedEndpoint, getPrimaryLessonPlanFileByID)
  priRouter.get("/revision/note/file/:id",protectedEndpoint, getPrimaryRevisionNotesFileByID)
 
  priRouter.get("/assessment/tool/file/:id",protectedEndpoint, getPrimaryAssessmentToolsFileByID)

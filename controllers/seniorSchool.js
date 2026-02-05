@@ -27,10 +27,14 @@ export const getGrade10Exams = async (req, res) => {
 };
 
 
-//GET FILE
+//GET FILE /Download
 export const getSeniorSchoolCurriculumDesignFileByID = async (req, res) => {
     return getFileByID(req, res, 'curriculum_designs',"elimufi1_senior");
 };
+export const getSeniorSchoolLessonPlanFileByID = async (req, res) => {
+    return getFileByID(req, res, 'lesson_plans',"elimufi1_senior");
+};
+
 export const getSeniorSchoolSchemesFileByID = async (req, res) => {
     return getFileByID(req, res, 'schemes',"elimufi1_senior");
 };
@@ -45,6 +49,9 @@ export const getGrade10ExamsFileByID = async (req, res) => {
 
 //RETRIEVE BY YEAR.
 export const getSeniorSchoolRevisionNotesByYear = async (req, res) => {
+    return getResourcesByYear(req, res, 'notes',"elimufi1_senior");
+}
+export const getSeniorSchoolLessonPlanByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'notes',"elimufi1_senior");
 }
 

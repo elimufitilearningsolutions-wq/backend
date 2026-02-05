@@ -48,6 +48,10 @@ export const getGrade6Exams = async (req, res) => {
 export const getPrimaryCurriculumDesignFileByID = async (req, res) => {
     return getFileByID(req, res, 'curriculum_designs',"elimufi1_primaryschool");
 };
+export const getPrimaryLessonPlanFileByID = async (req, res) => {
+    return getFileByID(req, res, 'lesson_plans',"elimufi1_primaryschool");
+};
+
 export const getPrimarySchemesFileByID = async (req, res) => {
     return getFileByID(req, res, 'schemes',"elimufi1_primaryschool");
 };
@@ -83,6 +87,10 @@ export const getGrade6ExamsFileByID = async (req, res) => {
 export const getPrimaryRevisionNotesByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'revision_notes',"elimufi1_primaryschool");
 }
+export const getPrimaryLessonPlanByYear = async (req, res) => {
+    return getResourcesByYear(req, res, 'lesson_plans',"elimufi1_primaryschool");
+}
+
 export const getPrimaryHolidayAssignmentsByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'holiday_assignments',"elimufi1_primaryschool");
 }

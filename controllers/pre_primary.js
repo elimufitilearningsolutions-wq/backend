@@ -36,6 +36,10 @@ return getResources(req, res, "holiday_assignments", "elimufi1_preprimary");
 export const getPriPrimaryCurriculumDesignByYear = async (req, res) => {
 return getResourcesByYear(req, res, 'curriculum_designs',"elimufi1_preprimary" );
 }
+export const getPriPrimaryLessonPlanByYear = async (req, res) => {
+return getResourcesByYear(req, res, 'lesson_plans',"elimufi1_preprimary" );
+}
+
 export const getPlayGroupColouringByYear = async (req, res) => {
 return getResourcesByYear(req, res, 'colouring_pages',"elimufi1_preprimary" );
 }
@@ -104,6 +108,9 @@ export const deleteAllPrePrimarySchemes = async (req, res) => {
 // DOWNLOAD FILE BY ID
 export const getPriPrimarySchemeFileByID = async (req, res) => {
 return getFileByID(req, res, 'schemes', "elimufi1_preprimary");
+}
+export const getPriPrimaryLessonPlanFileByID = async (req, res) => {
+return getFileByID(req, res, 'lesson_plans', "elimufi1_preprimary");
 }
 
 export const getPlayGroupExamByID = async (req, res) => {

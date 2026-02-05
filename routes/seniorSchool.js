@@ -8,6 +8,8 @@ import { getGrade10Exams,
     getSeniorSchoolCurriculumDesign, 
     getSeniorSchoolCurriculumDesignByYear, 
     getSeniorSchoolCurriculumDesignFileByID, 
+    getSeniorSchoolLessonPlanByYear, 
+    getSeniorSchoolLessonPlanFileByID, 
     getSeniorSchoolRevisionNotes, 
     getSeniorSchoolRevisionNotesFileByID, 
     getSeniorSchoolSchemes, 
@@ -24,6 +26,13 @@ seniorSchoolRouter.post("/create/grade10/exams", upload.any("files"), (req, res,
         req.body.table = 'grade10_exams';
         next();
     }, createResourceHandler);
+seniorSchoolRouter.post("/create/lesson/plans", upload.any("files"), (req, res, next) => {
+        req.body.schema = 'elimufi1_senior';
+        req.body.table = 'lesson_plans';
+        next();
+    }, createResourceHandler);
+
+
 seniorSchoolRouter.post("/create/curriculum/designs", upload.any("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_senior';
         req.body.table = 'curriculum_designs';
@@ -55,6 +64,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
     
      seniorSchoolRouter.get("/schemes/:year", getSeniorSchoolSchemesByYear);
      seniorSchoolRouter.get("/notes/:year", getSeniorSchoolRevisionNotes);
+     seniorSchoolRouter.get("/lesson/plans/:year", getSeniorSchoolLessonPlanByYear);
   
      seniorSchoolRouter.get("/curriculum/designs/:year", getSeniorSchoolCurriculumDesignByYear);
      seniorSchoolRouter.get("/grade10/examinations/:year", getGrade10ExamsByYear);
@@ -62,6 +72,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
     
     
      seniorSchoolRouter.get("/scheme/file/:id",protectedEndpoint,getSeniorSchoolSchemesFileByID)
+     seniorSchoolRouter.get("/lesson/plan/file/:id",protectedEndpoint,getSeniorSchoolLessonPlanFileByID)
      seniorSchoolRouter.get("/revision/note/file/:id",protectedEndpoint,getSeniorSchoolRevisionNotesFileByID)
     
      seniorSchoolRouter.get("/curriculum/design/file/:id",protectedEndpoint,getSeniorSchoolCurriculumDesignFileByID)
