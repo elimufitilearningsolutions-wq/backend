@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { uploadToR2 } from "../utils/r2Helpers.js";
 import { DeleteObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import r2Client from "../utils/r2Client.js";
@@ -210,43 +211,38 @@ export const getFileByID = async (req, res, tableName, schema) => {
     }
 
     const { file_url } = rows[0];
-
     if (!file_url) {
       return res.status(404).json({ error: "File URL missing." });
     }
 
-    // 🔹 Extract R2 object key safely
-    // Works for:
-    // https://bucket.account.r2.cloudflarestorage.com/path/file.pdf
+    // 🔹 Extract R2 object key
     const url = new URL(file_url);
     const fileKey = decodeURIComponent(url.pathname.slice(1));
 
-    // 🔹 Fetch object from R2
+    // 🔹 Create command
     const command = new GetObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME,
       Key: fileKey,
     });
 
-    const r2Response = await r2Client.send(command);
+    // 🔹 Generate pre-signed URL (e.g. 5 minutes)
+    const signedUrl = await getSignedUrl(r2Client, command, {
+      expiresIn: 60 * 5, // 5 minutes
+    });
 
-    // 🔹 Set headers
-    res.setHeader(
-      "Content-Type",
-      r2Response.ContentType || "application/octet-stream"
-    );
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${fileKey.split("/").pop()}"`
-    );
-
-    // 🔹 Stream file to client
-    r2Response.Body.pipe(res);
+    // 🔹 Send URL to frontend
+    return res.status(200).json({
+      downloadUrl: signedUrl,
+      expiresIn: 300,
+      filename: fileKey.split("/").pop(),
+    });
 
   } catch (error) {
-    console.error("Error streaming file from R2:", error);
+    console.error("Error generating presigned URL:", error);
     return handleDatabaseError(res, error);
   }
 };
+
 
 export const deleteResourcesBulk = async (req, res, tableName, schema) => {
   const { ids } = req.body;
@@ -328,6 +324,7 @@ export const deleteResourcesBulk = async (req, res, tableName, schema) => {
     return handleDatabaseError(res, error);
   }
 };
+
 
 export const deleteResourcesBulkHandler = async (req, res) => {
   try {

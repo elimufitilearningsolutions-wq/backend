@@ -158,7 +158,7 @@ priRouter.post("/create/lesson/plans", upload.array("files"), (req, res, next) =
  priRouter.get("/grade6/examinations/:year", getGrade6ExamsByYear);
  priRouter.get("/holiday/assignments/:year", getPrimaryHolidayAssignmentsByYear);
 
- priRouter.get("/scheme/file/:id",protectedEndpoint, getPrimarySchemesFileByID)
+ priRouter.get("/scheme/file/:id", protectedEndpoint, getPrimarySchemesFileByID)
  priRouter.get("/lesson/plan/file/:id",protectedEndpoint, getPrimaryLessonPlanFileByID)
  priRouter.get("/revision/note/file/:id",protectedEndpoint, getPrimaryRevisionNotesFileByID)
 
