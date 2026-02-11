@@ -32,7 +32,9 @@ import { /*createScheme, */
     getPlayGroupColouringByYear,
     deleteAllPrePrimarySchemes,
     getPriPrimaryLessonPlanByYear,
-    getPriPrimaryLessonPlanFileByID
+    getPriPrimaryLessonPlanFileByID,
+    getPriPrimaryTeachingAidsByYear,
+    getPriPrimaryTeachingAidFileByID
    
 } from "../controllers/pre_primary.js"
 import { protectedEndpoint } from "../controllers/auth.js"
@@ -44,6 +46,11 @@ const prePriRouter = express.Router()
 prePriRouter.post("/create/schemes", upload.array("files"), (req, res, next) => {
     req.body.schema = 'elimufi1_preprimary';
     req.body.table = 'schemes';
+    next();
+}, createResourceHandler);
+prePriRouter.post("/create/teaching/aids", upload.array("files"), (req, res, next) => {
+    req.body.schema = 'elimufi1_preprimary';
+    req.body.table = 'teaching_aids';
     next();
 }, createResourceHandler);
 
@@ -98,6 +105,7 @@ prePriRouter.get("/holiday/assignments", getPriPrimaryHolidayAssignments)
 prePriRouter.get("/curriculum/designs", getPriPrimaryCurriculumDesign)
 
 prePriRouter.get("/play/group/exams/:year", getPlayGroupExamsByYear)
+prePriRouter.get("/teaching/aids/:year", getPriPrimaryTeachingAidsByYear)
 prePriRouter.get("/lesson/plans/:year", getPriPrimaryLessonPlanByYear)
 
 prePriRouter.get("/play/group/colouring/:year", getPlayGroupColouringByYear)
@@ -110,6 +118,7 @@ prePriRouter.get("/curriculum/designs/:year", getPriPrimaryCurriculumDesignByYea
 
 //GET FILE BY ID/download
 prePriRouter.get("/scheme/file/:id", protectedEndpoint, getPriPrimarySchemeFileByID)
+prePriRouter.get("/teaching/aid/file/:id", protectedEndpoint, getPriPrimaryTeachingAidFileByID)
 prePriRouter.get("/lesson/plan/file/:id", protectedEndpoint, getPriPrimaryLessonPlanFileByID)
 
 prePriRouter.get("/play/group/exam/file/:id", protectedEndpoint, getPlayGroupExamByID)
