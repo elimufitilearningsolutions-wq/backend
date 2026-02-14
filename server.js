@@ -22,7 +22,7 @@ import { poolUsers } from "./db.js"; // DB connection
 
 dotenv.config();
 
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8000;
 const app = express();
 
 /* =======================
@@ -30,7 +30,7 @@ const app = express();
 ======================= */
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke"]
+    ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke", "https://api.elimufiti.co.ke"]
     : process.env.CORS_ORIGIN?.split(",") || [];
 
 const corsOptions = {
@@ -91,7 +91,7 @@ export const io = new Server(server, {
   cors: {
     origin:
       process.env.NODE_ENV === "production"
-        ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke"]
+        ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke", "https://api.elimufiti.co.ke"]
         : true,
     methods: ["GET", "POST"],
     credentials: true,
