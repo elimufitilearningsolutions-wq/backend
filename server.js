@@ -29,6 +29,8 @@ const app = express();
    CORS CONFIGURATION
 ======================= */
 // Allowed origins
+c
+// Allowed origins
 const allowedOrigins =
   process.env.NODE_ENV === "production"
     ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke", "https://api.elimufiti.co.ke"]
@@ -37,10 +39,7 @@ const allowedOrigins =
 // CORS options
 const corsOptions = {
   origin: (origin, callback) => {
-    // Normalize origin (remove trailing slash)
-    const cleanedOrigin = origin?.replace(/\/$/, "");
-
-    // Allow if origin is in allowedOrigins or if running locally (no origin)
+    const cleanedOrigin = origin?.replace(/\/$/, ""); // remove trailing slash
     if (
       process.env.NODE_ENV !== "production" ||
       allowedOrigins.includes(cleanedOrigin) ||
@@ -54,17 +53,13 @@ const corsOptions = {
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // include OPTIONS for preflight
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // allow cookies/auth if needed
+  credentials: true, // allow cookies/auth
 };
 
-// Apply CORS globally
+// ✅ Apply globally (once)
 app.use(cors(corsOptions));
 
-// Handle preflight requests for all routes
-app.options("*", cors(corsOptions));
-
-
-app.use(cors(corsOptions));
+// ✅ Handle preflight requests (once)
 app.options("*", cors(corsOptions));
 
 /* =======================
