@@ -28,24 +28,41 @@ const app = express();
 /* =======================
    CORS CONFIGURATION
 ======================= */
+// Allowed origins
 const allowedOrigins =
   process.env.NODE_ENV === "production"
     ? ["https://elimufiti.co.ke", "https://www.elimufiti.co.ke", "https://api.elimufiti.co.ke"]
     : process.env.CORS_ORIGIN?.split(",") || [];
 
+// CORS options
 const corsOptions = {
   origin: (origin, callback) => {
-    if (process.env.NODE_ENV !== "production" || allowedOrigins.includes(origin) || !origin) {
+    // Normalize origin (remove trailing slash)
+    const cleanedOrigin = origin?.replace(/\/$/, "");
+
+    // Allow if origin is in allowedOrigins or if running locally (no origin)
+    if (
+      process.env.NODE_ENV !== "production" ||
+      allowedOrigins.includes(cleanedOrigin) ||
+      !origin
+    ) {
       callback(null, true);
     } else {
       console.log(`Blocked CORS request from: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["POST", "GET", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // include OPTIONS for preflight
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  credentials: true, // allow cookies/auth if needed
 };
+
+// Apply CORS globally
+app.use(cors(corsOptions));
+
+// Handle preflight requests for all routes
+app.options("*", cors(corsOptions));
+
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
