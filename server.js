@@ -29,7 +29,6 @@ const app = express();
    CORS CONFIGURATION
 ======================= */
 // Allowed origins
-c
 // Allowed origins
 const allowedOrigins =
   process.env.NODE_ENV === "production"
