@@ -2,7 +2,7 @@ import express from "express"
 import upload from "../middlewares/upload.js";
 import { protectedEndpoint } from "../controllers/auth.js";
 import { createResourceHandler, } from "../controllers/resource.js";
-import { getGrade10EvaluationsByYear, getGrade10Exams, 
+import { getGrade10EvaluationFileByID, getGrade10EvaluationsByYear, getGrade10Exams, 
     getGrade10ExamsByYear, 
     getGrade10ExamsFileByID, 
     getSeniorSchoolCurriculumDesign, 
@@ -83,6 +83,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
     
      seniorSchoolRouter.get("/curriculum/design/file/:id",protectedEndpoint,getSeniorSchoolCurriculumDesignFileByID)
      seniorSchoolRouter.get("/grade10/examination/file/:id",protectedEndpoint,getGrade10ExamsFileByID)
+     seniorSchoolRouter.get("/grade10/evaluation/file/:id",protectedEndpoint,getGrade10EvaluationFileByID)
      {/*
      seniorSchoolRouter.delete("/schemes/:id", deletePrimarySchemesByID)
      seniorSchoolRouter.delete("/notes/file/:id", deletePrimaryRevisionNotesByID)

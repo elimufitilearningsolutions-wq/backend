@@ -60,7 +60,9 @@ import {
         getJssSchemesByYear,
         getJssLessonPlans,
         getJssLessonPlansByYear,
-        getJssLessonPlanFileByID} from "../controllers/jss.js"
+        getJssLessonPlanFileByID,
+        getGrade9ExaminationsByYear,
+        getGrade9ExaminationFileByID} from "../controllers/jss.js"
 import upload from "../middlewares/upload.js"
 import { protectedEndpoint } from "../controllers/auth.js"
 import { createResourceHandler, deleteResourcesBulkHandler } from "../controllers/resource.js"
@@ -107,6 +109,11 @@ jssRouter.post("/create/grade8/examinations", upload.array("files"), (req, res, 
         req.body.table = 'grade8_examinations';
         next();
     }, createResourceHandler);
+jssRouter.post("/create/grade9/examinations", upload.array("files"), (req, res, next) => {
+        req.body.schema = 'elimufi1_jss';
+        req.body.table = 'grade9_examinations';
+        next();
+    }, createResourceHandler);
 jssRouter.post("/create/fullset/examinations", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'fullset_examinations';
@@ -149,6 +156,7 @@ jssRouter.get   ("/assessment/tools/:year", getJssAssessmentToolsByYear)
 jssRouter.get   ("/lesson/plans/:year", getJssLessonPlansByYear)
 jssRouter.get   ("/grade7/examinations/:year", getGrade7ExaminationsByYear)
 jssRouter.get   ("/grade8/examinations/:year", getGrade8ExaminationsByYear)
+jssRouter.get   ("/grade9/examinations/:year", getGrade9ExaminationsByYear)
 jssRouter.get   ("/notes/:year", getJssNotesByYear)
 jssRouter.get   ("/schemes/:year", getJssSchemesByYear)
 jssRouter.get   ("/fullset/examinations/:year", getJssfullSetExaminationsByYear)
@@ -163,6 +171,7 @@ jssRouter.get   ("/assessment/tool/file/:id",protectedEndpoint, getJssAssesmentT
 jssRouter.get   ("/curriculum/design/file/:id", protectedEndpoint, getJssCurriculumdesignFileByID)
 jssRouter.get   ("/grade7/examination/file/:id", protectedEndpoint, getGrade7ExaminationFileByID)
 jssRouter.get   ("/grade8/examination/file/:id", protectedEndpoint, getGrade8ExaminationFileByID)
+jssRouter.get   ("/grade9/examination/file/:id", protectedEndpoint, getGrade9ExaminationFileByID)
 jssRouter.get   ("/fullset/examination/file/:id", protectedEndpoint,  getJssfullSetExaminationFileByID)
 
 jssRouter.get   ("/holiday/assignment/file/:id", protectedEndpoint, getJssHassignmentsFileByID)

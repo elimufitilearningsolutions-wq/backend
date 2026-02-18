@@ -28,6 +28,9 @@ export const getGrade7Examinations = async (req, res) => {
 export const getGrade8Examinations = async (req, res) => {
     return getResources(req, res, 'grade8_examinations',"elimufi1_jss");
 };
+export const getGrade9Examinations = async (req, res) => {
+    return getResources(req, res, 'grade9_examinations',"elimufi1_jss");
+};
 export const getJssfullSetExaminations = async (req, res) => {
     return getResources(req, res, 'fullset_examinations',"elimufi1_jss");
 };
@@ -58,6 +61,9 @@ export const getGrade7ExaminationsByYear = async (req, res) => {
 };
 export const getGrade8ExaminationsByYear = async (req, res) => {
     return getResources(req, res, 'grade8_examinations',"elimufi1_jss");
+};
+export const getGrade9ExaminationsByYear = async (req, res) => {
+    return getResources(req, res, 'grade9_examinations',"elimufi1_jss");
 };
 
 export const getJssfullSetExaminationsByYear = async (req, res) => {
@@ -193,6 +199,9 @@ export const getGrade7ExaminationFileByID = async (req, res) => {
 
 export const getGrade8ExaminationFileByID = async (req, res) => {
     return getFileByID(req, res, 'grade8_examinations',"elimufi1_jss");
+};
+export const getGrade9ExaminationFileByID = async (req, res) => {
+    return getFileByID(req, res, 'grade9_examinations',"elimufi1_jss");
 };
 
 export const getJssfullSetExaminationFileByID = async (req, res) => {

@@ -43,8 +43,11 @@ export const getSeniorSchoolRevisionNotesFileByID = async (req, res) => {
     return getFileByID(req, res, 'revision_notes',"elimufi1_senior");
 };
 
-export const getGrade10ExamsFileByID = async (req, res) => {
+export const getGrade10EvaluationFileByID = async (req, res) => {
     return getFileByID(req, res, 'grade10_evaluations',"elimufi1_senior");
+};
+export const getGrade10ExamsFileByID = async (req, res) => {
+    return getFileByID(req, res, 'grade10_exams',"elimufi1_senior");
 };
 
 //RETRIEVE BY YEAR.
