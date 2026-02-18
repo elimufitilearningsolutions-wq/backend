@@ -2,7 +2,7 @@ import express from "express"
 import upload from "../middlewares/upload.js";
 import { protectedEndpoint } from "../controllers/auth.js";
 import { createResourceHandler, } from "../controllers/resource.js";
-import { getGrade10Exams, 
+import { getGrade10EvaluationsByYear, getGrade10Exams, 
     getGrade10ExamsByYear, 
     getGrade10ExamsFileByID, 
     getSeniorSchoolCurriculumDesign, 
@@ -24,6 +24,11 @@ const seniorSchoolRouter = express.Router()
 seniorSchoolRouter.post("/create/grade10/exams", upload.any("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_senior';
         req.body.table = 'grade10_exams';
+        next();
+    }, createResourceHandler);
+seniorSchoolRouter.post("/create/grade10/evaluations", upload.any("files"), (req, res, next) => {
+        req.body.schema = 'elimufi1_senior';
+        req.body.table = 'grade10_evaluations';
         next();
     }, createResourceHandler);
 seniorSchoolRouter.post("/create/lesson/plans", upload.any("files"), (req, res, next) => {
@@ -57,7 +62,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
      
   
      seniorSchoolRouter.get('/curriculum/designs', getSeniorSchoolCurriculumDesign)
-     seniorSchoolRouter.get('/grade10/examinations', getGrade10Exams)
+     
 
     
      //get per year
@@ -67,6 +72,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
      seniorSchoolRouter.get("/lesson/plans/:year", getSeniorSchoolLessonPlanByYear);
   
      seniorSchoolRouter.get("/curriculum/designs/:year", getSeniorSchoolCurriculumDesignByYear);
+     seniorSchoolRouter.get("/grade10/evaluations/:year", getGrade10EvaluationsByYear);
      seniorSchoolRouter.get("/grade10/examinations/:year", getGrade10ExamsByYear);
  
     

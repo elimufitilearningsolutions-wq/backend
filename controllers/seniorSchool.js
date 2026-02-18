@@ -23,7 +23,7 @@ export const getSeniorSchoolRevisionNotes = async (req, res) => {
 
 
 export const getGrade10Exams = async (req, res) => {
-    return getResources(req, res, 'grade10_exams',"elimufi1_senior");
+    return getResources(req, res, 'grade10_evaluations',"elimufi1_senior");
 };
 
 
@@ -44,7 +44,7 @@ export const getSeniorSchoolRevisionNotesFileByID = async (req, res) => {
 };
 
 export const getGrade10ExamsFileByID = async (req, res) => {
-    return getFileByID(req, res, 'grade10_exams',"elimufi1_senior");
+    return getFileByID(req, res, 'grade10_evaluations',"elimufi1_senior");
 };
 
 //RETRIEVE BY YEAR.
@@ -61,6 +61,9 @@ export const getSeniorSchoolCurriculumDesignByYear = async (req, res) => {
 
 export const getSeniorSchoolSchemesByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'schemes',"elimufi1_senior");
+}
+export const getGrade10EvaluationsByYear = async (req, res) => {
+    return getResourcesByYear(req, res, 'grade10_evaluations',"elimufi1_senior");
 }
 export const getGrade10ExamsByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'grade10_exams',"elimufi1_senior");
@@ -85,7 +88,7 @@ export const updateSeniorSchoolHolidayAssignmentsByID = async (req, res) => {
     return updateResourceById(req, res, 'holiday_assignments',"elimufi1_senior");
 };
 export const updateGrade10ExamsByID = async (req, res) => {
-    return updateResourceById(req, res, 'grade10_exams',"elimufi1_senior");
+    return updateResourceById(req, res, 'grade10_evaluations',"elimufi1_senior");
 };
 
 //DELETE BY ID
@@ -101,5 +104,5 @@ export const deleteSeniorSchoolRevisionNotesByID = async (req, res) => {
 };
 
 export const deleteGrade10ExamsByID = async (req, res) => {
-    return deleteResource(req, res, 'grade10_exams',"elimufi1_senior");
+    return deleteResource(req, res, 'grade10_evaluations',"elimufi1_senior");
 };
