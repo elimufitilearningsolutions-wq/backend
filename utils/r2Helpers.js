@@ -22,7 +22,7 @@ export const uploadToR2 = async (fileName, fileBuffer, contentType) => {
 };
 
 // DOWNLOAD (SIGNED URL)
-export const getSignedR2DownloadUrl = async (key, expiresIn = 120) => {
+export const getSignedR2DownloadUrl = async (key, expiresIn = 3600) => {
   const command = new GetObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME,
     Key: key,
