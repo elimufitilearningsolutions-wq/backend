@@ -99,12 +99,12 @@ jssRouter.post("/create/curriculum/designs", upload.array("files"), (req, res, n
         req.body.table = 'curriculum_designs';
         next();
     }, createResourceHandler);
-jssRouter.post("/create/grade7/examinations", upload.array("files"), (req, res, next) => {
+jssRouter.post("/create/grade7/exam", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'grade7_examinations';
         next();
     }, createResourceHandler);
-jssRouter.post("/create/grade8/examinations", upload.array("files"), (req, res, next) => {
+jssRouter.post("/create/grade8/exam", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'grade8_examinations';
         next();
@@ -178,26 +178,21 @@ jssRouter.get   ("/holiday/assignment/file/:id", protectedEndpoint, getJssHassig
 
 
 //DELETE
-jssRouter.delete("/delete/schemes", deleteJssSchemes)
+
 jssRouter.post("/schemes/bulk", deleteResourcesBulkHandler);
-jssRouter.delete("/delete/notes", deleteJssNotes)
-jssRouter.delete ("/delete/assessment/tools", deleteJssAssesmentTools)
-jssRouter.delete("/delete/curriculum/designs", deleteAllJssCurriculumdesigns)
-jssRouter.delete("/delete/grade7/exams", deleteGrade7Examinations)
-jssRouter.delete("/delete/grade8/examinations",deleteGrade8Examinations)
-jssRouter.delete("/delete/fullset/exams", deleteAllJssfullSetExaminations)
+jssRouter.post("/notes/bulk", deleteResourcesBulkHandler)
+jssRouter.post ("/assessment/tools/bulk", deleteResourcesBulkHandler)
+jssRouter.post("/curriculum/designs/bulk", deleteResourcesBulkHandler)
+jssRouter.post("/grade7/examinations/bulk", deleteResourcesBulkHandler)
+jssRouter.post("/grade8/examinations/bulk",deleteResourcesBulkHandler)
+jssRouter.post("/fullset/exams/bulk", deleteResourcesBulkHandler)
+jssRouter.post("/holiday/assignments/bulk", deleteResourcesBulkHandler)
 
-jssRouter.delete("/delete/holiday/assignments", deleteAllJssHassignments)
 
-jssRouter.delete("/delete/schemes/:id",deleteJssSchemeByID)
-jssRouter.delete("/delete/notes/:id",deleteJssNotesByID)
-jssRouter.delete ("/delete/assessment/tools/:id", deleteJssAssesmentToolsByID)
-jssRouter.delete("/delete/curriculum/designs/:id", deleteJssCurriculumdesignByID)
-jssRouter.delete("/delete/grade7/exams/:id", deleteGrade7ExaminationByID)
-jssRouter.delete("/delete/grade8/examinations/:id",deleteGrade8ExaminationByID)
-jssRouter.delete("/delete/fullset/exams/:id", deleteJssfullSetExaminationByID)
 
-jssRouter.delete("/delete/holiday/assignments/:id", deleteJssHassignmentsByID)
+
+
+
 
 jssRouter.put("/update/schemes/:id",updateJssSchemeByID),
 jssRouter.put("/update/assessment/tools/:id", updateJssAssesmentToolsByID)

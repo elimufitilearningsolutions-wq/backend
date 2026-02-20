@@ -135,14 +135,15 @@ prePriRouter.put("/update/play/group/exam/:id",updatePlayGroupExamByID)
 prePriRouter.put("/update/play/group/exam/:id",updatePlayGroupExamByID)
 
 // DELETE BY ID
-prePriRouter.delete('/play/group/exams/:id', deletePlayGroupExamByID)
+prePriRouter.post('/play/group/exams/bulk', deleteResourcesBulkHandler)
 prePriRouter.post("/schemes/bulk", deleteResourcesBulkHandler)
-prePriRouter.delete('/pp1/exams/:id', deletePP1ExamByID)
-prePriRouter.delete('/pp2/exams/:id', deletePP2ExamByID)
-prePriRouter.delete('/holiday/assignments/:id', deletePriPrimaryHolidayAssignmentsByID)
-prePriRouter.delete('/curriculum/designs/:id', deletePriPrimaryCurriculumDesignByID)
+prePriRouter.post('/pp1/exams/bulk', deleteResourcesBulkHandler)
+prePriRouter.delete('/pp2/exams/:id', deleteResourcesBulkHandler)
+prePriRouter.post('/holiday/assignments/:id', deleteResourcesBulkHandler)
+prePriRouter.post('/curriculum/designs/bulk', deleteResourcesBulkHandler)
+prePriRouter.post('/teaching/aids/bulk', deleteResourcesBulkHandler)
+prePriRouter.post('/lesson/plans/bulk', deleteResourcesBulkHandler)
 
-prePriRouter.delete('/curriculum/designs', deleteAllPrePrimaryCurriculuDesigns)
-prePriRouter.delete('/schemes', deleteAllPrePrimarySchemes)
+
 
 export {prePriRouter}

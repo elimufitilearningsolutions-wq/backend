@@ -330,13 +330,26 @@ export const deleteResourcesBulkHandler = async (req, res) => {
   try {
     const { schema, table } = req.body;
 
+    console.log("deleteResourcesBulkHandler received:", {
+      schema: schema,
+      table:  table,
+      fullTable: schema && table ? `${schema}.${table}` : "(missing)",
+      body: req.body,
+      ip: req.ip,
+    });
+
     if (!schema || !table) {
       return res.status(400).json({ error: "Schema and table are required." });
     }
 
-    // Make tableName safe
-    const tableName = `${schema}.${table}`;
+    // Optional: very basic sanitization / block dangerous characters
+    if (/[\/;'"\\]/.test(schema) || /[\/;'"\\]/.test(table)) {
+      return res.status(400).json({
+        error: "Invalid characters in schema or table name"
+      });
+    }
 
+    const tableName = `${schema}.${table}`;
     return deleteResourcesBulk(req, res, tableName, schema);
   } catch (error) {
     console.error("deleteResourcesBulkHandler error:", error);

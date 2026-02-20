@@ -34,17 +34,8 @@ import {
     getGrade3ExamsFileByID,
     getGrade4ExamsFileByID,
     getGrade5ExamsFileByID,
-    getGrade6ExamsFileByID,    
-    deletePrimaryRevisionNotesByID,
-    deletePrimaryHolidayAssignmentsByID,
-    deletePrimaryAssessmentToolsByID,
-    deletePrimaryCurriculumDesignByID,
-    deleteGrade1ExamsByID,
-    deleteGrade2ExamsByID,
-    deleteGrade3ExamsByID,
-    deleteGrade4ExamsByID,
-    deleteGrade5ExamsByID,
-    deleteGrade6ExamsByID,    
+    getGrade6ExamsFileByID,   
+      
     getPrimarySchemesFileByID,
     deletePrimarySchemesByID,
     updatePrimarySchemeByID,   
@@ -174,18 +165,18 @@ priRouter.post("/create/lesson/plans", upload.array("files"), (req, res, next) =
  
 
 
- priRouter.delete("/schemes/:id", deletePrimarySchemesByID)
+ 
  priRouter.post("/schemes/bulk", deleteResourcesBulkHandler);
- priRouter.delete("/notes/file/:id", deletePrimaryRevisionNotesByID)
- priRouter.delete("/holiday/revision/:id", deletePrimaryHolidayAssignmentsByID)
- priRouter.delete("/assessment/tools/:id", deletePrimaryAssessmentToolsByID)
- priRouter.delete("/curriculum/designs/:id", deletePrimaryCurriculumDesignByID)
- priRouter.delete("/grade1/examinations/:id", deleteGrade1ExamsByID)
- priRouter.delete("/grade2/examinations/:id", deleteGrade2ExamsByID)
- priRouter.delete("/grade3/examinations/:id", deleteGrade3ExamsByID)
- priRouter.delete("/grade4/examinations/:id", deleteGrade4ExamsByID)
- priRouter.delete("/grade5/examinations/:id", deleteGrade5ExamsByID)
- priRouter.delete("/grade6/examinations/:id", deleteGrade6ExamsByID)
+ priRouter.post("/notes/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/holiday/revision/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/assessment/tools/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/curriculum/designs/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade1/examinations/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade2/examinations/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade3/examinations/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade4/examinations/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade5/examinations/bulk", deleteResourcesBulkHandler)
+ priRouter.post("/grade6/examinations/bulk", deleteResourcesBulkHandler )
  
  priRouter.put("/schemes/:id", updatePrimarySchemeByID)
  priRouter.put("/notes/file/:id", updatePrimaryRevisionNotesByID)
