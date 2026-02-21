@@ -109,7 +109,7 @@ jssRouter.post("/create/grade8/examinations", upload.array("files"), (req, res, 
         req.body.table = 'grade8_examinations';
         next();
     }, createResourceHandler);
-jssRouter.post("/create/grade9/examinations", upload.array("files"), (req, res, next) => {
+jssRouter.post("/create/grade9/exam", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'grade9_examinations';
         next();
