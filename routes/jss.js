@@ -146,7 +146,7 @@ jssRouter.get   ("/lesson/plans",  getJssLessonPlans)
 jssRouter.get   ("/notes",  getJssNotes) 
 jssRouter.get   ("/assessment/tools", getJssAssessmentTools)
 jssRouter.get   ("/curriculum/designs", getJssCurriculumdesign)
-jssRouter.get   ("/grade7/examinations", getGrade7Examinations)
+
 jssRouter.get   ("/grade8/examinations", getGrade8Examinations)
 jssRouter.get   ("/fullset/examinations", getJssfullSetExaminations)
 jssRouter.get   ("/holiday/assignments", getJssHolidayAssignments)

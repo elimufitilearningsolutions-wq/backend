@@ -57,20 +57,20 @@ export const getJssHolidayAssignmentsByYear = async (req, res) => {
     return getResourcesByYear(req, res, 'holiday_assignments',"elimufi1_jss");
 }
 export const getGrade7ExaminationsByYear = async (req, res) => {
-    return getResources(req, res, 'grade7_examinations',"elimufi1_jss");
+    return getResourcesByYear(req, res, 'grade7_examinations',"elimufi1_jss");
 };
 export const getGrade8ExaminationsByYear = async (req, res) => {
-    return getResources(req, res, 'grade8_examinations',"elimufi1_jss");
+    return getResourcesByYear(req, res, 'grade8_examinations',"elimufi1_jss");
 };
 export const getGrade9ExaminationsByYear = async (req, res) => {
-    return getResources(req, res, 'grade9_examinations',"elimufi1_jss");
+    return getResourcesByYear(req, res, 'grade9_examinations',"elimufi1_jss");
 };
 
 export const getJssfullSetExaminationsByYear = async (req, res) => {
-    return getResources(req, res, 'fullset_examinations',"elimufi1_jss");
+    return getResourcesByYear(req, res, 'fullset_examinations',"elimufi1_jss");
 };
 export const getJssCurriculumdesignByYear = async (req, res) => {
-    return getResources(req, res, 'curriculum_designs',"elimufi1_jss");
+    return getResourcesByYear(req, res, 'curriculum_designs',"elimufi1_jss");
 };
 
 // DELETION OF ALL RESOURCES (JSS)
