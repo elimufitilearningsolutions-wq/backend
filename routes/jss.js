@@ -99,12 +99,12 @@ jssRouter.post("/create/curriculum/designs", upload.array("files"), (req, res, n
         req.body.table = 'curriculum_designs';
         next();
     }, createResourceHandler);
-jssRouter.post("/create/grade7/exam", upload.array("files"), (req, res, next) => {
+jssRouter.post("/create/grade7/examinations", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'grade7_examinations';
         next();
     }, createResourceHandler);
-jssRouter.post("/create/grade8/exam", upload.array("files"), (req, res, next) => {
+jssRouter.post("/create/grade8/examinations", upload.array("files"), (req, res, next) => {
         req.body.schema = 'elimufi1_jss';
         req.body.table = 'grade8_examinations';
         next();
