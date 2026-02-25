@@ -79,7 +79,7 @@ seniorSchoolRouter.post("/create/schemes", upload.any("files"), (req, res, next)
     
      seniorSchoolRouter.get("/scheme/file/:id",protectedEndpoint,getSeniorSchoolSchemesFileByID)
      seniorSchoolRouter.get("/lesson/plan/file/:id",protectedEndpoint,getSeniorSchoolLessonPlanFileByID)
-     seniorSchoolRouter.get("/revision/note/file/:id",protectedEndpoint,getSeniorSchoolRevisionNotesFileByID)
+     seniorSchoolRouter.get("/note/file/:id",protectedEndpoint,getSeniorSchoolRevisionNotesFileByID)
     
      seniorSchoolRouter.get("/curriculum/design/file/:id",protectedEndpoint,getSeniorSchoolCurriculumDesignFileByID)
      seniorSchoolRouter.get("/grade10/examination/file/:id",protectedEndpoint,getGrade10ExamsFileByID)

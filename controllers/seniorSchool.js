@@ -40,7 +40,7 @@ export const getSeniorSchoolSchemesFileByID = async (req, res) => {
 };
 
 export const getSeniorSchoolRevisionNotesFileByID = async (req, res) => {
-    return getFileByID(req, res, 'revision_notes',"elimufi1_senior");
+    return getFileByID(req, res, 'notes',"elimufi1_senior");
 };
 
 export const getGrade10EvaluationFileByID = async (req, res) => {
