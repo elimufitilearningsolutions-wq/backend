@@ -62,7 +62,7 @@ export const stkPush = async (req, res) => {
     const { CheckoutRequestID } = response.data;
     console.log("🆔 CheckoutRequestID:", CheckoutRequestID);
 
-    await saveStkRequest(userId, CheckoutRequestID, "", "", formattedPhone);
+    await saveStkRequest(userId, CheckoutRequestID, null, null, formattedPhone);
     console.log("💾 STK request saved to DB for user:", userId);
 
     return res.status(200).json(response.data);
