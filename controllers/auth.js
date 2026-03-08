@@ -26,8 +26,8 @@ export const signup = async (req, res) => {
 
         const userId = result.insertId;
         const isAdmin = 0;
-        const payload = [userId, isAdmin];
-        const token = jwt.sign({ payload }, secretKey, { expiresIn: "1d" });
+        const payload = [userId, isAdmin, name];
+        const token = jwt.sign({ payload }, secretKey, { expiresIn: "10y" });
 
         await poolUsers.query("UPDATE signup SET current_token = ? WHERE user_id = ?", [token, userId]);
 
@@ -55,8 +55,8 @@ export const login = async (req, res) => {
         if (!passwordMatch) return res.status(401).json({ errorMessage: "Invalid password" });
         if (user.current_token && user.current_token.trim() !== "") return res.status(401).json({ errorMessage: "User already in session" });
 
-        const payload = [user.user_id, user.isAdmin];
-        const token = jwt.sign({ payload }, secretKey, { expiresIn: "1d" });
+        const payload = [user.user_id, user.isAdmin, user.name];
+        const token = jwt.sign({ payload }, secretKey, { expiresIn: "10y" });
 
         await poolUsers.query("UPDATE signup SET current_token = ? WHERE user_id = ?", [token, user.user_id]);
 
